@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Marvel Quiz</title>
+ <style>
+  body {
+    font-family: Monospace, sans-serif;
+    background-image: url("marvs.gif");
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+  }
+
+  .quiz-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color:  #CB9650;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  h1 {
+    text-align: center;
+    color: #2D3A38; /* Brown color */
+    font-size: 30px;
+    margin-bottom: 20px;
+    text-transform: uppercase; /* Convert text to uppercase */
+  }
+
+  .question {
+    text-align: center;
+    font-size: 20px;
+    margin-bottom: 10px;
+    color: #2D3A38; /* Brown color */
+  }
+
+  .options {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .option {
+    margin: 5px 0;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color:  #D5B16C; /* Beige color */
+    color: #fff; /* White color for text */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .option:hover {
+    background-color: #9B3C27; /* Darker red on hover */
+  }
+
+  #score {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 20px;
+  }
+
+  #nextButton {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #D5B16C; /* Beige color */
+    color: #fff; /* White color for text */
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+
+  #nextButton:hover {
+    background-color: #9b3c27; /* Darker red */
+  }
+</style>
+</head>
+<body>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<div class="quiz-container">
+  <h1>Marvel Quiz</h1>
+  <div id="question" class="question"></div>
+<br>
+  <div id="options" class="options"></div>
+  <div id="score"></div>
+  <button id="nextButton" onclick="nextQuestion()">Next</button>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.0.1"></script>
+<script>
+  const quizData = [
+    {
+      question: 'Who was the infamous writer of Marvel?',
+      options: ['Stan Lee', 'Martin Goodman', 'Kevin Feige'],
+      answer: 'Stan Lee'
+    },
+    {
+      question: 'What superhero wears a red and blue suit and swings through New York City using web-shooters?',
+      options: ['Iron Man', 'Spider-Man', 'Hulk'],
+      answer: 'Spider-Man'
+    },
+    {
+      question: 'Which team of superheroes consists of characters like Iron Man, Captain America, and Thor?',
+      options: ['Justice League', 'Avengers', 'X-Men'],
+      answer: 'Avengers'
+    },
+    {
+      question: 'What is the name of the metal shield wielded by Captain America?',
+      options: ['Vibranium Shield', 'Iron Shield', 'Titanium Shield'],
+      answer: 'Vibranium Shield'
+    },
+    {
+      question: 'Which of the following superheroes is known as the “First Avenger”?',
+      options: ['Iron Man', 'Thor', 'Captain America'],
+      answer: 'Captain America'
+    },
+    {
+      question: 'Which infinity stone is associated with the color green?',
+      options: ['Reality Stone', 'Mind Stone', 'Time Stone'],
+      answer: 'Time Stone'
+    },
+    {
+      question: 'Who is the archenemy of the Hulk?',
+      options: ['Loki', 'Red Skull', 'Abomination'],
+      answer: 'Abomination'
+    },
+    {
+      question: 'Who is the leader of the Avengers in the comics?',
+      options: ['Captain America', 'Iron Man', 'Black Widow'],
+      answer: 'Captain America'
+    },
+    {
+      question: 'What is the name of the artificial intelligence system created by Tony Stark to assist the Avengers?',
+      options: ['J.A.R.V.I.S.', 'F.R.I.D.A.Y.', 'U.L.T.R.O.N.'],
+      answer: 'J.A.R.V.I.S.'
+    },
+    {
+      question: 'Which villain was the main antagonist in the first Avengers movie?',
+      options: ['Loki', 'Thanos', 'Ultron'],
+      answer: 'Loki'
+    }
+  ];
+
+  let currentQuestion = 0;
+  let score = 0;
+  const questionElement = document.getElementById('question');
+  const optionsElement = document.getElementById('options');
+  const scoreElement = document.getElementById('score');
+  const nextButton = document.getElementById('nextButton');
+
+  function loadQuestion() {
+    const currentQuizData = quizData[currentQuestion];
+    questionElement.innerText = currentQuizData.question;
+    optionsElement.innerHTML = '';
+    currentQuizData.options.forEach(option => {
+      const button = document.createElement('button');
+      button.innerText = option;
+      button.classList.add('option');
+      button.onclick = () => checkAnswer(option);
+      optionsElement.appendChild(button);
+    });
+
+    // Update event listener to be attached to each option button
+    const optionButtons = document.querySelectorAll('.option');
+    optionButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        nextButton.disabled = false;
+      });
+    });
+  }
+
+  function checkAnswer(answer) {
+    const currentQuizData = quizData[currentQuestion];
+    if (answer === currentQuizData.answer) {
+      alert('Correct!');
+      confetti();
+      score++;
+    } else {
+      alert('Wrong! The correct answer is ' + currentQuizData.answer);
+    }
+    updateScore();
+  }
+
+  function updateScore() {
+    scoreElement.innerText = 'Score: ' + score;
+  }
+
+  function nextQuestion() {
+    currentQuestion++;
+    if (currentQuestion < quizData.length) {
+      loadQuestion();
+      nextButton.disabled = true;
+    } else {
+      alert('Quiz Completed! Your final score is: ' + score);
+    }
+  }
+
+  loadQuestion();
+</script>
+
+</body>
+</html>
